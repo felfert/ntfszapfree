@@ -1,6 +1,6 @@
 CC = x86_64-w64-mingw32-gcc
 CC32 = i686-w64-mingw32-gcc
-CFLAGS = -D_WIN32_WINNT=0x0600 -Wall -Wextra -mwin32
+CFLAGS = -D_WIN32_WINNT=0x0500 -Wall -Wextra -mwin32
 LDLAGS = -mconsole -static -static-libgcc
 
 all: zapfree32.exe zapfree.exe
