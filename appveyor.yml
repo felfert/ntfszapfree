@@ -9,3 +9,6 @@ test: off
 
 build_script:
   - sh: make clean zip
+
+artifacts:
+  - path: ntfszapfree.zip
