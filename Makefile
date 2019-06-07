@@ -6,10 +6,13 @@ LDLAGS = -mconsole -static -static-libgcc
 all: zapfree32.exe zapfree.exe
 
 clean:
-	rm -f *.exe
+	rm -f *.exe *.zip
 
 zapfree.exe: zapfree.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $<
 
 zapfree32.exe: zapfree.c
 	$(CC32) $(CFLAGS) $(LDFLAGS) -o $@ $<
+
+zip: zapfree32.exe zapfree.exe
+	zip ntfszapfree.zip $^

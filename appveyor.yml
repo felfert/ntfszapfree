@@ -1,8 +1,11 @@
 image: ubuntu
 
+version: '0.{build}'
+
 install:
-  sh: sudo apt-get update; sudo apt-get install -y gcc-mingw-w64
+  - sh: sudo apt-get update; sudo apt-get install -y gcc-mingw-w64
 
 test: off
 
-build: off
+build_script:
+  - sh: make clean zip
