@@ -92,7 +92,7 @@ static int zapfreespace(const char *drive) {
     HANDLE h = CreateFile(fname, GENERIC_WRITE|GENERIC_READ, 0, NULL, CREATE_ALWAYS,
             FILE_FLAG_NO_BUFFERING|FILE_FLAG_SEQUENTIAL_SCAN|FILE_FLAG_DELETE_ON_CLOSE
             |FILE_ATTRIBUTE_HIDDEN, NULL);
-    if (h == INVALID_HANDLE_VALUE) {
+    if (INVALID_HANDLE_VALUE == h) {
         ple("Could not create zapfree.dat: ");
         return 1;
     }
@@ -116,7 +116,7 @@ static int zapfreespace(const char *drive) {
     h = CreateFile(fname, GENERIC_WRITE, 0, NULL, CREATE_NEW,
             FILE_FLAG_SEQUENTIAL_SCAN|FILE_FLAG_DELETE_ON_CLOSE|FILE_ATTRIBUTE_HIDDEN
             |FILE_FLAG_WRITE_THROUGH, NULL);
-    if (h != INVALID_HANDLE_VALUE) {
+    if (INVALID_HANDLE_VALUE != h) {
         while (zapSize) {
             if (!zap(h, zapSize)) {
                 zapSize--;
@@ -132,7 +132,7 @@ static int zapfreespace(const char *drive) {
         snprintf(fname, sizeof(fname), "%szapmft%06d.dat", drive, nrFiles++);
         h = CreateFile( fname, GENERIC_WRITE, 0, NULL, CREATE_NEW,
                 FILE_FLAG_SEQUENTIAL_SCAN|FILE_FLAG_DELETE_ON_CLOSE|FILE_ATTRIBUTE_HIDDEN, NULL);
-        if (h == INVALID_HANDLE_VALUE ) {
+        if (INVALID_HANDLE_VALUE == h) {
             break;
         }
         zapSize = prevSize;
@@ -153,6 +153,7 @@ static int zapfreespace(const char *drive) {
         } 
         printf("\rZapping MFT...%c", wheel[nrFiles % 8]);
     }
+    printf("\rdone                     \n");
 
     return 0;
 }
@@ -163,12 +164,13 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Usage: zapfree -z <DriveLetter>:\n");
         return 1;
     }
-    if (!GetFullPathNameA(argv[2], MAX_PATH, path, NULL)) {
-        ple("GetFullPathNameA failed: ");
-        return 1;
+    strncpy(path, argv[2], MAX_PATH);
+    if ('\0' == path[2]) {
+        path[2] = '\\';
+        path[3] = '\0';
     }
     if (!(isalpha(path[0]) && path[1] == ':' && path[2] == '\\' && path[3] == '\0')) {
-        fprintf(stderr, "%s is an invalid drive specification\n", argv[1]);
+        fprintf(stderr, "%s is an invalid drive specification\n", argv[2]);
         return 1;
     }
     return zapfreespace(path);
